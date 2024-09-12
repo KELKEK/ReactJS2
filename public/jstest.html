@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>JavaScript연습</h1>
+    <script type="module">
+        console.dir(btn1);
+        //alert(typeof btn1);
+    </script>
+    <button id="btn1">버튼1</button> 
+    <div id="here">여기</div>
+    <div id="here2">저기</div>
+
+    <script type="module" src="./go.js"></script>
+    <script type="module" src="./go2.js"></script>
+
+    <script>
+        //하나의 자바스크립트를 모듈이라고 한다.
+        //비동기
+        const promise1 = new Promise(function(resolve2, reject){
+            setTimeout(()=>{
+                resolve2("성공~~~");
+            }, 1000);
+        });
+        const promise2 = new Promise(function(resolve2, reject2){
+            setTimeout(()=>{
+                resolve2("실패~~~");
+            }, 1000);
+        });
+        promise1.then(function(response){
+            console.log(response);
+        });
+        promise2.then(function(response){
+            console.log(response);
+        });
+
+    </script>
+    <script>
+        //스프레드 연산자
+            const numbersOne = [1, 2, 3];
+            const numbersTwo = [4, 5, 6];
+            const numbersThree = [numbersOne, numbersTwo]; //2차원배열
+            const numbersCombined = [...numbersOne, ...numbersTwo]; //1차원배열, ...은 합쳐진다는 뜻
+            console.log(numbersThree);
+            console.log(numbersCombined);
+
+            const numbers = [1, 2, 3, 4, 5, 6];
+            const [one, two, ...rest] = numbers;
+            console.log(one, two, rest);
+
+            const v10 = { brand: 'Ford', model: 'Mustang', color: 'red' };
+            const v20 = { type: 'car', year: 2021, color: 'yellow' };
+            const v30 = { "aa":v10, "bb":v20} //객체 내에 객체가 들어간다.
+            const myUpdatedCars = { ...v10, ...v20} //위의 그 객체들이 합쳐진다.
+            console.log(v10);
+            console.log(v20);
+            console.log(v30);
+            console.log(myUpdatedCars)
+    </script>
+    <script>
+        var student = {name:"신윤철", score:100};
+        var {name, score} = student;
+        console.log("학생의 이름은 " + student.name);//student. <- 붙여도 되고 안붙여도 됨
+        console.log("학생의 점수는 " + score);
+    </script>
+    <script>
+        //Destructing Object  
+            const obj = {
+                brand: 'Ford',
+                model: 'Mustang', 
+                type: 'car', 
+                year: 2021, 
+                color: 'red',
+                registration: { city: "Houston", state: "Texas", country: "USA" }
+            }
+            myCarInfo(obj);
+            function myCarInfo(car) { //car 변수는 지금 정의한다.
+                const message = 'My '
+                    + car.type + ' is a ' + car.color + ' ' + car.brand + ' ' + car.model + '.';
+                document.getElementById("here").innerHTML = message;
+            }
+            myCarInfo2(obj) //함수 호출
+            function myCarInfo2({ model: mm, brand, registration: { state, country, city : cc } }) {
+                let message = 'My ' + mm + ' is registered in ' + state + '.';
+                message += "country = " + country;
+                message += "city = " + cc;
+                message += "brand = " + brand; 
+                document.getElementById("here2").innerHTML = message;
+            }
+    </script>
+    <script>
+        //Destructing Arrays (배열을 구조화) : 함수가 배열을 반환할 때 유용
+        const arr = ['BMW520', '포터2', 'Discovery'];
+        // old way
+        const car = arr[0];
+        const truck = arr[1];
+        const suv = arr[2];
+        // new way
+        const [car2, truck2, suv2] = arr;
+
+        console.log(car2, truck2, suv2);
+        const [add, subtract, multiply, divide] = calculate(10, 3);
+        console.log(add, subtract, multiply, divide);
+        function calculate(a, b) {
+            const add = a + b;
+            const subtract = a - b;
+            const multiply = a * b; const divide = a / b;
+            return [add, subtract, multiply, divide]; //배열에 여러 개를 넣어 여러 개를 return할 수 있다.
+        }
+    </script>
+    <script>
+        //Array 메서드 (map) : 각 요소마다 looping하여 새로운 배열return 
+        //map은 변형 data -> 변형하여 return하기
+        const myArray = ['apple', 'banana', 'orange'];
+        const myList = myArray.map((item) => "<p>" + item + "</p>");
+        console.log(myList);
+        document.getElementById("here").innerHTML = myList.join().replaceAll(",", "<hr/>"); //하이라이트 줄로 변경
+    </script>
+    <script>
+        //this 연습
+        class Header {
+            constructor() { this.color = "Red"; }
+            changeColor = function (e) {
+                const hereObj = document.getElementById("here");
+                if (this == window)
+                    hereObj.style.backgroundColor = "orange";
+                else if (this.nodeName == "BUTTON")
+                    hereObj.style.backgroundColor = "lightgreen";
+                hereObj.innerHTML += this; console.dir(this);
+                e.stopPropagation(); //이벤트의 전파를 막기위함. 윈도우에도 클릭, 버튼에도 클릭 이벤트가 있어서 전파될 수 있다.(버튼이 눌릴 시 윈도우도 눌림)
+            }
+        }
+        const myheader = new Header();
+        window.addEventListener("click", myheader.changeColor); //callback
+        document.getElementById("btn1").addEventListener("click", myheader.changeColor); //callback
+    </script>
+    <script>
+        class Shape{
+            //class는 Object를 만드는 툴이다.(속성과 기능을 정의)
+            constructor(name) { 
+            this.model = name; //생성시마다 메서드 추가
+            this.draw = function(){ console.log(this.model + "~~그리다....");} 
+            }//생성자 안에서 함수를 생성할 때에는 'this.'을 붙여주어야 한다.
+        // 프로토타입 메서드
+        display(){
+            return "나는 " + this.model;
+        }
+        }//class end
+        const myshape = new Shape("도형");
+        console.log(myshape);
+        myshape.draw();
+        console.log(myshape.display());
+
+        //상속
+            class Rectangle extends Shape {
+                constructor(name, width, height) {
+                    super(name);
+                    this.width = width;
+                    this.height = height;
+                }
+                show() {
+                    return this.display() + " ,width= " + this.width + " ,height=" + this.height;
+                }
+            }//자동정렬 단축키 Control + K + F
+     const myshape2 = new Rectangle("사각형", 10, 20);
+     console.log(myshape2.show());
+
+    </script>
+    <script>
+        //익명함수, 즉시실행 화살표함수
+        //익명함수
+        (function(){
+            console.log("익명함수..즉시실행함수");
+        })();
+
+        const f1 = function(){
+            console.log("익명함수..literal에 할당");
+        };
+        
+        const f2 =()=>{
+            console.log("익명함수..literal에 할당...화살표함수");
+        };
+
+        function f3(){
+            console.log("선언적함수");
+        }
+
+        f1();
+        f2();
+        f3();
+    </script>
+    <script>
+        const myWork = function(){console.log("리액트시작~~");};
+        const myWork2 =()=> function(){console.log("리액트시작~~");};
+        //setInterval(myWork, 1000);
+
+        //매개변수가 함수이다.
+        function f2(count, callback){
+            for(let index=0; index < count; index++){
+                callback(index + 1); //함수 호출
+            }
+        }
+        var myFunction = function(param){
+            console.log(param);
+        }
+        f2(3, myFunction);
+    </script>
+    <script>
+        //호이스팅 : var, function들을 맨위로 올린다.
+        console.log(v1);
+        f1();
+        var v1 = 100;
+        function f1(){}
+    </script>
+    <script>
+        function call(){
+        var a = 10; //var는 지역변수, 함수 내에 있으면 외부 접근 불가
+        let b = 20; //let는 block에서만 유효, block 밖에서는 못 씀
+        const c = 30;
+        }
+        //c = 40;//상수는 수정 불가
+        console.log(a + b + c);
+    </script>
+</body>
+</html>
